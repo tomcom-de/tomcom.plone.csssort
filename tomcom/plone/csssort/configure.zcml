@@ -1,0 +1,17 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:five="http://namespaces.zope.org/five">
+
+    <browser:page
+        for="*"
+        name="csssort_view"
+        template="csssort_view.pt"
+        permission="cmf.ManagePortal"
+        />
+
+
+    <browser:resourceDirectory
+        name="csssort"
+        directory="resource" />
+
+</configure>

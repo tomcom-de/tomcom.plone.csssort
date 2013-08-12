@@ -1,0 +1,319 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="here/tc_manage_main/macros/master"
+      i18n:domain="plone">
+
+    <metal:block metal:fill-slot="custom">
+        <script src="/++resource++csssort/js/js.js"></script>
+        <link href="/++resource++csssort/css/css.css" rel="stylesheet">
+    </metal:block>
+
+<body>
+
+<metal:main fill-slot="main"
+    tal:define="portal here/portal_url/getPortalObject;
+                portal_css nocall:here/portal_css">
+
+    <h1 i18n:translate="">
+        Sort css
+        -
+        <tal:block tal:content="python:here.ZopeTime().strftime('%d.%m.%Y %H:%M:%S')"/>
+    </h1>
+
+    <ul class="nav nav-tabs">
+        <li>
+            <a tal:attributes="href portal/absolute_url"
+               i18n:translate="">Home</a>
+        </li>
+    </ul>
+
+    <form action="manage_saveStylesheets" id="save-css-form"
+          tal:attributes="action python:portal.absolute_url()+'/portal_css/manage_saveStylesheets'"
+          method="post">
+
+        <div>
+            <input class="btn btn-primary css-save"
+                   type="submit" value="Save"
+                   i18n:attributes="value label_save"/>
+        </div>
+        <br/>
+        <table class="table table-bordered table-striped table-hover">
+        <thead>
+        <tr>
+            <th>
+            </th>
+            <th>
+                <span title="Enable/Disable this StyleSheet">Enabled?</span>
+            </th>
+            <th>
+                <span title="Path to the style sheet">Path</span>
+            </th>
+            <th>
+                <span title="Restrict to authenticated users? If yes, the condition will be ignored.">Restrict?</span>
+            </th>
+            <th>
+                <span title="TAL Condition for inclusion">Condition</span>
+            </th>
+            <th>
+                <span title="Merging allowed?">Merge</span>
+            </th>
+            <th>
+                <span title="Caching allowed?">Cache</span>
+            </th>
+            <th>
+                <span title="This may be necessary when merging stylesheets that use relative URLs. It will not change the underlying stylesheet. If the box is checked an absolute path is rendered in front of the relative.">Paths</span>
+            </th>
+            <th>
+                <span title="">Bundle</span>
+            </th>
+            <th>
+                <span title="">CSS Media</span>
+            </th>
+            <th>
+                <span title="">Rel</span>
+            </th>
+            <th>
+                <span title="">Render type</span>
+            </th>
+            <th>
+                <span title="">Compression type</span>
+            </th>
+            <th>
+                <span title="Conditional Comment (IE Only)">IE Only</span>
+            </th>
+            <th>
+                <span title="">Title</span>
+            </th>
+            <th>
+            </th>
+        </tr>
+        </thead>
+        <tbody id="sortable">
+        <tal:block tal:repeat="stylesheet portal_css/getResources">
+            <tr tal:define="resourceExists python:stylesheet.isExternalResource() or portal.restrictedTraverse(stylesheet.getId(), False) and True;
+                            alternateStylesheet python:stylesheet.getRendering() == 'link' and stylesheet.getTitle()"
+                tal:attributes="class python:resourceExists and (alternateStylesheet and 'alternate' or 'found') or 'error'">
+                <td>
+                    <i class="icon-reorder"></i>
+                </td>
+                <td>
+                    <input class="sort-index"
+                           type="hidden" name="stylesheets.sort:records:int"
+                           tal:attributes="value repeat/stylesheet/index" />
+
+                    <input type="checkbox" name="stylesheets.enabled:records"
+                           title="Enabled?"
+                           tal:attributes="checked stylesheet/getEnabled" />
+                    <input type="hidden" name="stylesheets.enabled:records:boolean:default" value="False" />
+                </td>
+                <td>
+                    <!-- This is ugly the tooltip has any crappy max-width. So if the string is to long
+                        The string moves over the tooltyp layout. So split and join to get a string break
+                     -->
+                    <input type="text" name="stylesheets.id:records" size="80" class="tool-tip"
+                           tal:attributes="value stylesheet/getId;
+                                           title python:'.'.join(stylesheet.getId().split('.'))" />
+                </td>
+                <td>
+                    <input type="checkbox" name="stylesheets.authenticated:records:boolean" class="input-small"
+                           tal:attributes="checked stylesheet/getAuthenticated | default" />
+                    <input type="hidden" name="stylesheets.authenticated:records:boolean:default" value="False" />
+                </td>
+                <td>
+                    <input type="text" name="stylesheets.expression:records" class="input-small"
+                           tal:attributes="value stylesheet/getExpression" />
+                </td>
+                <td>
+                    <input type="checkbox" name="stylesheets.cookable:records:boolean"
+                           tal:attributes="checked stylesheet/getCookable | default;
+                                           disabled stylesheet/isExternalResource | nothing" />
+                    <input type="hidden" name="stylesheets.cookable:records:boolean:default" value="False" />
+                </td>
+                <td>
+                    <input type="checkbox" name="stylesheets.cacheable:records:boolean"
+                           tal:attributes="checked stylesheet/getCacheable | default;
+                                           disabled stylesheet/isExternalResource | nothing" />
+                    <input type="hidden" name="stylesheets.cacheable:records:boolean:default" value="False" />
+                </td>
+                <td>
+                    <input type="checkbox" name="stylesheets.applyPrefix:records:boolean"
+                           tal:attributes="checked stylesheet/getApplyPrefix | default;
+                                           disabled stylesheet/isExternalResource | nothing" />
+                    <input type="hidden" name="stylesheets.applyPrefix:records:boolean:default" value="False" />
+                </td>
+                <td>
+                     <input type="text" name="stylesheets.bundle:records" class="input-small-x"
+                           tal:attributes="value stylesheet/getBundle|nothing" />
+                </td>
+                <td>
+                    <input type="text" name="stylesheets.media:records" class="input-small-x"
+                           tal:attributes="value stylesheet/getMedia|nothing" />
+                </td>
+                <td>
+                    <input type="text" name="stylesheets.rel:records" class="input-small-x"
+                           tal:attributes="value stylesheet/getRel|nothing" />
+                </td>
+                <td>
+                    <select name="stylesheets.rendering:records" class="input-small">
+                        <option tal:define="options python:stylesheet.isExternalResource() and portal_css.getExternalRenderingOptions() or portal_css.getRenderingOptions()"
+                                tal:repeat="r options"
+                                tal:attributes="value r;
+                                                selected python:r == stylesheet.getRendering()"
+                                tal:content="r">import</option>
+                    </select>
+                </td>
+                <td>
+                    <select name="stylesheets.compression:records" class="input-small">
+                        <option tal:define="options python:stylesheet.isExternalResource() and portal_css.getExternalCompressionOptions() or portal_css.getCompressionOptions()"
+                                tal:repeat="r options"
+                                tal:attributes="value r;
+                                                selected python:r == stylesheet.getCompression()"
+                                tal:content="r">safe</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="text" name="stylesheets.conditionalcomment:records" class="input-small-x"
+                           tal:attributes="value stylesheet/getConditionalcomment" />
+                </td>
+                <td>
+                    <input type="text" name="stylesheets.title:records" class="input-small-x"
+                           tal:attributes="value stylesheet/getTitle|nothing" />
+                </td>
+                <td>
+
+                    <a title="Remove"
+                       class="remove"
+                       tal:attributes="href string:${portal/absolute_url}/portal_css/manage_removeStylesheet?id=${stylesheet/getQuotedId}"
+                       i18n:attributes="title label_delete">
+                        <i class="icon-remove"></i>
+                    </a>
+
+                </td>
+            </tr>
+        </tal:block>
+        </tbody>
+        </table>
+
+        <input class="btn btn-primary css-save"
+               type="submit" value="Save"
+               i18n:attributes="value label_save"/>
+
+    </form>
+
+    <form action="manage_addStylesheet"
+          tal:attributes="action python:portal.absolute_url()+'/portal_css/manage_addStylesheet'"
+          method="post">
+
+        <div class="well">
+
+            <h3>Add a new stylesheet</h3>
+
+            <div>
+                <label for="id">ID/URL</label>
+                <input type="text" name="id" size="50" />
+            </div>
+
+            <div>
+                <label>Bundle</label>
+                <input type="text" name="bundle" size="50" />
+            </div>
+
+            <div>
+                <label>Title</label>
+                <input type="text" name="title" />
+            </div>
+
+            <div>
+                <label>Condition</label>
+                <input type="text" name="expression" size="50" />
+            </div>
+
+            <div>
+                <label>Conditional Comment (IE Only)</label>
+                <input type="text" name="conditionalcomment" size="50" />
+            </div>
+
+            <div>
+                <label>CSS Media</label>
+                <input type="text" name="media" />
+            </div>
+
+            <div>
+                <label>rel</label>
+                <input type="text" name="rel" value="stylesheet" />
+            </div>
+
+            <div>
+                <label>Render type</label>
+                <select name="rendering">
+                    <option tal:repeat="r portal_css/getRenderingOptions"
+                            tal:attributes="value r"
+                            tal:content="r">import</option>
+                </select>
+            </div>
+
+            <div>
+            <label>Compression type</label>
+            <select name="compression">
+                <option tal:repeat="r portal_css/getCompressionOptions"
+                        tal:attributes="value r;
+                                        selected python:r=='safe'"
+                        tal:content="r">safe</option>
+            </select>
+            </div>
+
+            <div>
+                <label class="checkbox">
+                    <input type="checkbox" name="enabled:boolean" value="True" checked="1" />
+                    Enabled?
+                    <input type="hidden" name="enabled:boolean:default" value="False" />
+                </label>
+            </div>
+
+            <div>
+                <label class="checkbox">
+                    <input type="checkbox" name="cookable:boolean" value="True" checked="1" />
+                    Merging allowed?
+                    <input type="hidden" name="cookable:boolean:default" value="False" />
+                </label>
+            </div>
+
+            <div>
+                <label class="checkbox">
+                    <input type="checkbox" name="cacheable:boolean" value="True" checked="1" />
+                    Caching allowed?
+                    <input type="hidden" name="cacheable:boolean:default" value="False" />
+                </label>
+            </div>
+
+            <div>
+                <label class="checkbox">
+                    <input type="checkbox" name="authenticated" value="0" />
+                    Restrict to authenticated users? If yes, the condition will be ignored.
+                </label>
+            </div>
+
+            <div>
+                <label class="checkbox" title="This may be necessary when merging stylesheets that use relative URLs. It will not change the underlying stylesheet.">
+                    <input type="checkbox" name="applyPrefix:boolean" value="True" />
+                    Replace relative paths in <code>url()</code> statements with absolute paths?
+                    <input type="hidden" name="applyPrefix:boolean:default" value="False" />
+                </label>
+            </div>
+
+          <input class="btn btn-primary"
+                 type="submit" value="Add"
+                 i18n:attributes="value"/>
+
+        </div>
+
+    </form>
+
+</metal:main>
+
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+body {
+padding:10px;
+font-size:80%
+}
+
+.table {
+font-size:85%
+}
+
+.table th {
+white-space:nowrap;
+}
+
+.table th, .table td {
+line-height: 15px;
+padding: 5px;
+}
+
+.input-small-x {
+width: 40px;
+}
+
+.remove {
+color:red;
+}
+
+.tooltip-inner{
+max-width:none;
+}
