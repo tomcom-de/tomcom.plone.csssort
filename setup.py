@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '4.3.0.1'
+version = '4.3.0.2'
 
 setup(name='tomcom.plone.csssort',
       version=version,
@@ -28,6 +28,7 @@ setup(name='tomcom.plone.csssort',
       include_package_data=True,
       install_requires=[
         'setuptools',
+        'tomcom.plone.base',
       ],
       extras_require={'test': [
         'collective.testcaselayer',
