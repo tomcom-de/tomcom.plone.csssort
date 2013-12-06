@@ -1,6 +1,11 @@
 <configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:zcml="http://namespaces.zope.org/zcml"
            xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:i18n="http://namespaces.zope.org/i18n"
            xmlns:five="http://namespaces.zope.org/five">
+
+    <i18n:registerTranslations directory="locales" />
+    <include package="Products.CMFCore" file="permissions.zcml"/>
 
     <browser:page
         for="*"
@@ -9,9 +14,24 @@
         permission="cmf.ManagePortal"
         />
 
+    <browser:page
+        for="*"
+        name="csssort"
+        class=".browser.Browser"
+        permission="cmf.ManagePortal"
+        allowed_interface=".browser.ICSSSort"
+        />
 
     <browser:resourceDirectory
         name="csssort"
         directory="resource" />
+
+    <adapter
+        factory=".export.TCCSSRegistryNodeAdapter"
+        provides="Products.GenericSetup.interfaces.IBody"
+        for="Products.ResourceRegistries.interfaces.ICSSRegistry"
+        />
+
+    <include file="profiles.zcml" />
 
 </configure>

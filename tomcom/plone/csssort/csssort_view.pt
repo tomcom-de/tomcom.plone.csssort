@@ -20,7 +20,8 @@
     <h1 i18n:translate="">
         Sort css
         -
-        <tal:block tal:content="python:here.ZopeTime().strftime('%d.%m.%Y %H:%M:%S')"/>
+        <tal:block tal:content="python:here.ZopeTime().strftime('%d.%m.%Y %H:%M:%S')"
+                   i18n:name="value"/>
     </h1>
 
     <ul class="nav nav-tabs">
@@ -38,6 +39,11 @@
             <input class="btn btn-primary css-save"
                    type="submit" value="Save"
                    i18n:attributes="value label_save"/>
+            <a class="btn" target="_blank"
+               tal:attributes="href string:${here/portal_url}/@@csssort/export"
+               i18n:translate="">
+               Export
+            </a>
         </div>
         <br/>
         <table class="table table-bordered table-striped table-hover">
