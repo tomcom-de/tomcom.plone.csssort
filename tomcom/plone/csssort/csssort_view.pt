@@ -49,6 +49,15 @@
         <table class="table table-bordered table-striped table-hover">
         <thead>
         <tr>
+            <th colspan="15">
+                <label for="debugmode" id="debugmodelabel" class="checkbox">
+                    <input type="checkbox" id="debugmode" name="debugmode:boolean"
+                           tal:attributes="checked portal_css/getDebugMode" />
+                    <tal:block i18n:translate="">Development mode</tal:block>
+                </label>
+            </th>
+        </tr>
+        <tr>
             <th>
             </th>
             <th>
